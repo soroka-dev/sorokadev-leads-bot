@@ -1,13 +1,13 @@
 # SorokaDev — приём заявок
 
-Cloudflare Worker принимает заявку с [сайта SorokaDev](https://soroka-dev.github.io/) и пересылает её владельцу в личный чат Telegram. Код открыт, но токен бота и ID чата хранятся только в секретах Cloudflare.
+Cloudflare Worker принимает заявки с [сайта SorokaDev](https://soroka-dev.github.io/) и пересылает их владельцу в личный чат через `@sorokadevbot`. Рабочий адрес сервиса: `https://sorokadev-leads-bot.soroka-development.workers.dev/lead`. Код открыт, но токен бота и ID чата хранятся только в секретах Cloudflare.
 
-## Подключение
+## Как устроено подключение
 
-1. Разверните Worker из этого репозитория в Cloudflare Workers.
-2. Напишите своему боту `/start`.
-3. Узнайте свой числовой `chat_id` (например, через метод Telegram Bot API `getUpdates` после `/start`).
-4. В настройках Worker → **Variables and Secrets** добавьте два секрета: `TELEGRAM_BOT_TOKEN` (токен от BotFather) и `TELEGRAM_CHAT_ID` (ваш числовой ID чата). Затем разверните новую версию Worker.
-5. Укажите URL `https://<worker>.workers.dev/lead` на сайте в `script.js`.
+1. Сайт отправляет данные формы на `/lead` этого Worker.
+2. Worker проверяет данные и отправляет сообщение через Telegram Bot API.
+3. В настройках Worker → **Variables and Secrets** уже добавлены секреты `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`. После перевыпуска токена обновите его там.
 
-Секреты не добавляйте в GitHub и не вставляйте в код сайта. Бот не сохраняет заявки в базе данных. Перед публичным запуском рекомендуется включить защиту формы от спама (например, Cloudflare Turnstile).
+Worker сейчас развёрнут через редактор Cloudflare. GitHub хранит исходный код; автоматическое развёртывание из репозитория не подключено. При изменении `worker.js` обновите код Worker в Cloudflare.
+
+Секреты не добавляйте в GitHub и не вставляйте в код сайта. Бот не сохраняет заявки в базе данных. Форма ограничивает размер полей и содержит скрытое поле против простых спам-ботов; при росте спама можно добавить Cloudflare Turnstile.
